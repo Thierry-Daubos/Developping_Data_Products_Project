@@ -1,0 +1,9 @@
+name: Developping_Data_Products_Project
+account: thierry-daubos
+server: shinyapps.io
+bundleId: 249306
+url:
+        https://thierry-daubos.shinyapps.io/Developping_Data_Products_Project
+when: 1440362447.2078
+asMultiple: FALSE
+asStatic: FALSE
