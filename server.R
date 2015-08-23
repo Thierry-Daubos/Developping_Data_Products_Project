@@ -2,9 +2,8 @@ library(datasets)
 library(shiny)
 
 
-# We tweak the "am" field to have nicer factor labels. Since this doesn't
-# rely on any user inputs we can do this once at startup and then use the
-# value throughout the lifetime of the application
+# We create a copy of the orinigal dataset 
+# and recast some of the numeric variables into factor variable 
 mpgData     <- mtcars
 mpgData$am  <- as.factor(mpgData$am)
 mpgData$cyl <- as.factor(mpgData$cyl)
@@ -15,19 +14,13 @@ mpgData$carb<- as.factor(mpgData$carb)
 # fitting linear model
 modelFit <- lm(mpg ~ cyl + disp + hp + drat + wt + qsec + vs + am + gear + carb , data = mpgData)
 
-# Choose a model by AIC in a Stepwise Algorithm
-#select_model <- step(modelFit, direction="forward")
-
 # generate model summary
 summary(modelFit)
 
-# Define server logic required to plot various variables against mpg
+# Define server logic
 shinyServer(function(input, output) {
             
-            # Reactive expression to predict the mpg. This is 
-            # called whenever the inputs change. The renderers defined 
-            # below then all use the value computed from this expression
-      
+            # Function used to compute the estimated fuel consuption
             output$estimate <- renderText({ 
                                     input$estimateButton
                                     isolate({
@@ -53,6 +46,7 @@ shinyServer(function(input, output) {
                                          plot(modelFit, panel = panel.smooth)
                                        })
             # Create reactive functions
+            # These function are updated whenever a change in the inputs occure 
             car_cyl    <- reactive({
                                    cyl <- as.factor(input$v_cyl)
                                   })
@@ -72,8 +66,6 @@ shinyServer(function(input, output) {
                                    carb <- as.factor(input$v_carb)
                                   })
             
-            
-                        
             # Generate a summary of the data
             output$summary <- renderPrint({
                                           summary(mpgData)
@@ -84,11 +76,12 @@ shinyServer(function(input, output) {
                                           summary(modelFit)
                                         })
             
-            # Generate an HTML table view of the data
+            # Generate an table view of the dataset
             output$table <- renderTable({
                                          data.frame(mpgData)
                                        })
             
+            # Generate the formula displayed in the help section
             formulaText <- reactive({
                    paste("mpg ~ ",input$t_cyl, input$t_disp, input$t_hp, input$t_wt,
                                   input$t_qsec, input$t_vs, input$t_am, input$t_gear, input$t_carb)

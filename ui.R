@@ -5,8 +5,7 @@ shinyUI(pageWithSidebar(
       # Application name
       headerPanel("Miles per gallon predictor"),
       
-      # Sidebar with controls to select the variable to plot against mpg
-      # and to specify whether outliers should be included
+      # Conditional Sidebar to control the variables to include for the prediction
       sidebarPanel(
             checkboxGroupInput(inputId = "t_cyl", 
                                label   = "Select variables account for :",
